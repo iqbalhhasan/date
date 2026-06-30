@@ -297,8 +297,8 @@
       border-radius: 25px;
     }
 
-    .intro-portrait.bride { transform: rotate(-7deg) translateY(6px); }
-    .intro-portrait.groom { transform: rotate(7deg); }
+    .intro-portrait.groom { transform: rotate(-7deg) translateY(6px); }
+    .intro-portrait.bride { transform: rotate(7deg); }
 
     .intro-seal {
       position: absolute;
@@ -339,7 +339,7 @@
       display: block;
       aspect-ratio: 4 / 5;
       object-fit: cover;
-      object-position: center 30%;
+      object-position: center 16%;
       border-radius: 24px;
     }
 
@@ -813,9 +813,13 @@
     }
 
     @media (max-width: 390px) {
-      .screen { padding-left: 16px; padding-right: 16px; }
-      .intro-couple { gap: 10px; }
-      .intro-portrait { width: 98px; height: 124px; }
+      .screen { padding-left: 14px; padding-right: 14px; }
+      h1 { font-size: clamp(30px, 10vw, 40px); }
+      .lead { font-size: 14px; }
+      .intro-couple { width: min(100%, 290px); gap: 8px; }
+      .intro-portrait { width: 90px; height: 116px; }
+      .intro-seal { width: 60px; height: 60px; }
+      .intro-seal span { font-size: 24px; }
       .time-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .options-grid { grid-template-columns: 1fr; }
       .option { min-height: 104px; }
@@ -853,13 +857,13 @@
       <section class="card" aria-live="polite">
         <div class="screen intro active" data-screen="intro">
           <span class="kicker">A tiny question, from my heart ✨</span>
-          <div class="intro-couple" aria-label="A photo collage of the bride and groom">
-            <figure class="intro-portrait bride">
-              <img id="bridePhoto" alt="Bride portrait" />
-            </figure>
-            <div class="love-seal intro-seal" aria-hidden="true"><span>💌</span></div>
+          <div class="intro-couple" aria-label="A photo collage of the groom and bride">
             <figure class="intro-portrait groom">
               <img id="groomPhoto" alt="Groom portrait" />
+            </figure>
+            <div class="love-seal intro-seal" aria-hidden="true"><span>💌</span></div>
+            <figure class="intro-portrait bride">
+              <img id="bridePhoto" alt="Bride portrait" />
             </figure>
           </div>
           <h1><span id="recipientName">My Love</span>, will you go on a date with me?</h1>
@@ -1325,7 +1329,7 @@
       ctx.fillStyle = "rgba(255,255,255,.95)";
       ctx.fill();
       ctx.restore();
-      drawRoundedImage(ctx, duetImage, 338, 336, 404, 272, 26, .36);
+      drawRoundedImage(ctx, duetImage, 338, 336, 404, 272, 26, .08);
 
       const rows = [
         ["DATE", state.date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }), "01"],
