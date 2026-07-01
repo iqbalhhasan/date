@@ -929,7 +929,7 @@
               <img id="bridePhoto" alt="Bride portrait" />
             </figure>
           </div>
-          <h1><span id="recipientName">My Love</span>, let's make a DAY memorable forever!</h1>
+          <h1><span id="recipientName">My Love</span>, let's make a day memorable forever!</h1>
           <p class="lead">I planned the sweetest part. You get to choose the perfect day, the food, and the place.</p>
           <button class="primary-btn big" id="yesBtn" type="button">Yes, absolutely 💗</button>
           <p class="small-note">Made with a whole lot of love by <span id="senderName">Hira</span>.</p>
@@ -1058,8 +1058,8 @@
          index.html?to=Her%20Name&from=Your%20Name
     */
     const DEFAULTS = {
-      recipient: "My Love",
-      sender: "your husband",
+      recipient: "IQRA",
+      sender: "HIRA",
       note: "I love doing life with you. Here’s to one more beautiful memory together. 🌹"
     };
 
@@ -1438,7 +1438,7 @@
 
       ctx.fillStyle = "#bd356e";
       ctx.font = '800 19px system-ui, -apple-system, "Segoe UI", sans-serif';
-      ctx.fillText("OUR DATE NIGHT  •  MADE WITH LOVE", 540, 1302);
+      ctx.fillText("OUR MEMORABLE DAY  •  MADE WITH LOVE BY HIRA", 540, 1302);
 
       return await new Promise((resolve, reject) => {
         canvas.toBlob(blob => {
@@ -1508,7 +1508,7 @@
         if (canShareFile) {
           showToast(`Image ready — choose ${targetName}`);
           navigator.share({
-            title: "Our Date Night",
+            title: "Our Memorable Day",
             text: planText(),
             files: [file]
           }).catch(error => {
