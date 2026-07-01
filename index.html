@@ -650,29 +650,37 @@
       padding: 0;
       list-style: none;
       text-align: left;
+      display: grid;
+      gap: 12px;
     }
 
     .summary-row {
       display: grid;
-      grid-template-columns: 44px 1fr;
-      gap: 13px;
+      grid-template-columns: 58px 1fr;
+      gap: 14px;
       align-items: center;
-      padding: 14px 0;
-      border-bottom: 1px dashed rgba(120,62,85,.14);
+      padding: 14px 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(120,62,85,.14);
+      background: rgba(255,255,255,.42);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45);
     }
-    .summary-row:last-child { border-bottom: 0; }
+    .summary-row:last-child { border-bottom: 1px solid rgba(120,62,85,.14); }
 
     .summary-icon {
-      width: 42px;
-      height: 42px;
+      width: 54px;
+      height: 54px;
       display: grid;
       place-items: center;
-      border-radius: 14px;
-      background: var(--rose-100);
-      font-size: 20px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #efd5e0, #ecd0dc);
+      color: var(--plum);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+      font-size: 28px;
+      line-height: 1;
     }
 
-    .summary-label { display: block; margin-bottom: 2px; color: var(--muted); font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .08em; }
+    .summary-label { display: block; margin-bottom: 3px; color: #9a5d79; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
     .summary-value { color: var(--plum); font-size: 17px; font-weight: 900; line-height: 1.35; }
 
     .love-note {
@@ -910,7 +918,7 @@
   <main class="app-shell">
     <div class="app">
       <div class="topbar">
-        <div class="brand"><span class="brand-mark">💗</span><span>Date Night</span></div>
+        <div class="brand"><span class="brand-mark">💕</span><span>A Memorable Date</span></div>
         <div class="progress" id="progress" aria-label="Invitation progress">
           <span id="progressText">1 of 4</span>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -932,7 +940,7 @@
           <h1><span id="recipientName">My Love</span>, will you go on a date with me?</h1>
           <p class="lead">I planned the sweet part. You get to choose the perfect day, the food, and the place.</p>
           <button class="primary-btn big" id="yesBtn" type="button">Yes, absolutely 💗</button>
-          <p class="small-note">Made with a whole lot of love by <span id="senderName">your husband</span>.</p>
+          <p class="small-note">Made with a whole lot of love by <span id="senderName">Hira</span>.</p>
         </div>
 
         <div class="screen" data-screen="datetime">
@@ -1013,10 +1021,10 @@
               </div>
 
               <ul class="summary-list">
-                <li class="summary-row"><span class="summary-icon">📅</span><div><span class="summary-label">Date</span><span class="summary-value" id="summaryDate"></span></div></li>
-                <li class="summary-row"><span class="summary-icon">⏰</span><div><span class="summary-label">Time</span><span class="summary-value" id="summaryTime"></span></div></li>
-                <li class="summary-row"><span class="summary-icon">🍽️</span><div><span class="summary-label">Food</span><span class="summary-value" id="summaryFood"></span></div></li>
-                <li class="summary-row"><span class="summary-icon">📍</span><div><span class="summary-label">Place</span><span class="summary-value" id="summaryPlace"></span></div></li>
+                <li class="summary-row"><span class="summary-icon" id="summaryDateIcon">🗓️</span><div><span class="summary-label">Date</span><span class="summary-value" id="summaryDate"></span></div></li>
+                <li class="summary-row"><span class="summary-icon" id="summaryTimeIcon">⏰</span><div><span class="summary-label">Time</span><span class="summary-value" id="summaryTime"></span></div></li>
+                <li class="summary-row"><span class="summary-icon" id="summaryFoodIcon">🍽️</span><div><span class="summary-label">Food</span><span class="summary-value" id="summaryFood"></span></div></li>
+                <li class="summary-row"><span class="summary-icon" id="summaryPlaceIcon">📍</span><div><span class="summary-label">Place</span><span class="summary-value" id="summaryPlace"></span></div></li>
               </ul>
 
               <p class="love-note" id="finalLoveNote">I love doing life with you. Here’s to one more beautiful memory together. 🌹</p>
@@ -1255,11 +1263,41 @@
       $("#placeNext").disabled = !state.place;
     }
 
+    function getSummaryFoodIcon() {
+      const map = {
+        "Pizza": "🍕",
+        "Sushi": "🍣",
+        "Burgers": "🍔",
+        "Pasta": "🍝",
+        "Kacchi": "🍛",
+        "Dessert date": "🍰",
+        "Tacos": "🌮",
+        "Surprise me": "🎁"
+      };
+      return map[state.food] || "🍽️";
+    }
+
+    function getSummaryPlaceIcon() {
+      const map = {
+        rooftop: "🌆",
+        restaurant: "🕯️",
+        picnic: "🧺",
+        drive: "🚗",
+        home: "🏠",
+        custom: "📍"
+      };
+      return map[state.placeId] || "📍";
+    }
+
     function buildSummary() {
       $("#summaryDate").textContent = state.date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
       $("#summaryTime").textContent = state.time;
       $("#summaryFood").textContent = state.food;
       $("#summaryPlace").textContent = state.place;
+      $("#summaryDateIcon").textContent = "🗓️";
+      $("#summaryTimeIcon").textContent = "⏰";
+      $("#summaryFoodIcon").textContent = getSummaryFoodIcon();
+      $("#summaryPlaceIcon").textContent = getSummaryPlaceIcon();
     }
 
     function planText() {
