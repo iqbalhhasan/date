@@ -1344,6 +1344,229 @@
       return selected?.icon || "📍";
     }
 
+    function drawCanvasIcon(ctx, kind, cx, cy, size) {
+      const x = cx - size / 2;
+      const y = cy - size / 2;
+      const s = size;
+
+      ctx.save();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+
+      const stroke = (color = "#71506b", width = 3) => {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.stroke();
+      };
+
+      const fillStroke = (fill, color = "#71506b", width = 3) => {
+        ctx.fillStyle = fill;
+        ctx.fill();
+        stroke(color, width);
+      };
+
+      const rr = (rx, ry, rw, rh, radius, fill, outline = null, width = 2) => {
+        roundedRectPath(ctx, rx, ry, rw, rh, radius);
+        ctx.fillStyle = fill;
+        ctx.fill();
+        if (outline) {
+          ctx.strokeStyle = outline;
+          ctx.lineWidth = width;
+          ctx.stroke();
+        }
+      };
+
+      const line = (x1, y1, x2, y2, color = "#71506b", width = 3) => {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        stroke(color, width);
+      };
+
+      const circle = (px, py, r, fill, outline = null, width = 2) => {
+        ctx.beginPath();
+        ctx.arc(px, py, r, 0, Math.PI * 2);
+        ctx.fillStyle = fill;
+        ctx.fill();
+        if (outline) stroke(outline, width);
+      };
+
+      if (kind === "date") {
+        rr(x + s*.13, y + s*.17, s*.74, s*.68, s*.12, "#ffffff", "#80627a", 2.5);
+        rr(x + s*.13, y + s*.17, s*.74, s*.20, s*.10, "#39aeea");
+        ctx.fillStyle = "#39aeea";
+        ctx.fillRect(x + s*.13, y + s*.28, s*.74, s*.09);
+        line(x + s*.32, y + s*.10, x + s*.32, y + s*.25, "#80627a", 4);
+        line(x + s*.68, y + s*.10, x + s*.68, y + s*.25, "#80627a", 4);
+        const dots = [[.30,.49],[.50,.49],[.70,.49],[.30,.66],[.50,.66],[.70,.66]];
+        dots.forEach(([dx,dy]) => rr(x+s*dx-s*.045, y+s*dy-s*.035, s*.09, s*.07, s*.02, "#c4b7c8"));
+      } else if (kind === "time") {
+        circle(cx, cy + s*.06, s*.27, "#ffedf4", "#7b5873", 3);
+        circle(cx, cy + s*.06, s*.20, "#ffffff");
+        line(cx, cy + s*.06, cx, cy - s*.07, "#d94683", 4);
+        line(cx, cy + s*.06, cx + s*.12, cy + s*.13, "#d94683", 4);
+        circle(cx, cy + s*.06, s*.035, "#d94683");
+        ctx.beginPath();
+        ctx.arc(cx - s*.20, cy - s*.18, s*.12, Math.PI*.95, Math.PI*1.75);
+        stroke("#f2b52b", 5);
+        ctx.beginPath();
+        ctx.arc(cx + s*.20, cy - s*.18, s*.12, Math.PI*1.25, Math.PI*2.05);
+        stroke("#f2b52b", 5);
+        line(cx - s*.16, cy + s*.29, cx - s*.22, cy + s*.37, "#7b5873", 4);
+        line(cx + s*.16, cy + s*.29, cx + s*.22, cy + s*.37, "#7b5873", 4);
+      } else if (kind === "pizza") {
+        ctx.beginPath();
+        ctx.moveTo(cx - s*.28, cy - s*.28);
+        ctx.lineTo(cx + s*.30, cy - s*.14);
+        ctx.lineTo(cx - s*.08, cy + s*.34);
+        ctx.closePath();
+        fillStroke("#ffd16a", "#91573f", 2.5);
+        line(cx - s*.28, cy - s*.28, cx + s*.30, cy - s*.14, "#d87545", 7);
+        circle(cx - s*.02, cy - s*.02, s*.055, "#d84d55");
+        circle(cx + s*.10, cy - s*.11, s*.05, "#d84d55");
+      } else if (kind === "sushi") {
+        [-.18, .02, .22].forEach((off, i) => {
+          rr(cx - s*.28, cy + s*off - s*.08, s*.56, s*.15, s*.05, i === 1 ? "#fff2ef" : "#f5f0e6", "#8a687d", 1.8);
+          rr(cx - s*.25, cy + s*off - s*.08, s*.50, s*.06, s*.03, i === 1 ? "#f18b9d" : "#ff765c");
+        });
+      } else if (kind === "burger") {
+        ctx.beginPath();
+        ctx.arc(cx, cy - s*.08, s*.27, Math.PI, 0);
+        ctx.lineTo(cx + s*.27, cy - s*.02);
+        ctx.lineTo(cx - s*.27, cy - s*.02);
+        ctx.closePath();
+        fillStroke("#f3b54b", "#8b5e40", 2);
+        rr(cx-s*.27, cy+s*.03, s*.54, s*.08, s*.03, "#71a94c");
+        rr(cx-s*.26, cy+s*.12, s*.52, s*.08, s*.03, "#824732");
+        rr(cx-s*.27, cy+s*.21, s*.54, s*.10, s*.04, "#f3b54b", "#8b5e40", 2);
+      } else if (kind === "pasta") {
+        ctx.beginPath();
+        ctx.moveTo(cx-s*.30, cy+s*.02);
+        ctx.quadraticCurveTo(cx, cy+s*.40, cx+s*.30, cy+s*.02);
+        ctx.closePath();
+        fillStroke("#ffffff", "#80627a", 2.5);
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, s*.27, s*.10, 0, 0, Math.PI*2);
+        fillStroke("#e85d45", "#80627a", 2);
+        line(cx+s*.12, cy-s*.03, cx+s*.28, cy-s*.30, "#67964b", 4);
+      } else if (kind === "kacchi") {
+        ctx.beginPath();
+        ctx.moveTo(cx-s*.31, cy-s*.01);
+        ctx.quadraticCurveTo(cx, cy+s*.39, cx+s*.31, cy-s*.01);
+        ctx.closePath();
+        fillStroke("#f7f4ef", "#80627a", 2.5);
+        ctx.beginPath();
+        ctx.ellipse(cx, cy-s*.02, s*.29, s*.13, 0, 0, Math.PI*2);
+        fillStroke("#f4c64e", "#80627a", 2);
+        circle(cx-s*.10, cy-s*.03, s*.045, "#a45a3d");
+        circle(cx+s*.09, cy+s*.00, s*.045, "#a45a3d");
+        line(cx-s*.03, cy-s*.08, cx+s*.03, cy-s*.16, "#5c9a52", 3);
+      } else if (kind === "cake") {
+        rr(cx-s*.25, cy-s*.02, s*.50, s*.30, s*.04, "#ffe0e8", "#80627a", 2);
+        rr(cx-s*.25, cy-s*.02, s*.50, s*.10, s*.04, "#f48aad");
+        line(cx, cy-s*.02, cx, cy-s*.28, "#80627a", 3);
+        circle(cx, cy-s*.32, s*.04, "#ffb52e");
+      } else if (kind === "taco") {
+        ctx.beginPath();
+        ctx.arc(cx, cy+s*.08, s*.30, Math.PI, 0);
+        ctx.lineTo(cx-s*.30, cy+s*.08);
+        ctx.closePath();
+        fillStroke("#f6c554", "#8b5e40", 2.5);
+        circle(cx-s*.10, cy-s*.02, s*.05, "#5d9b52");
+        circle(cx+s*.03, cy-s*.06, s*.05, "#d94a54");
+        circle(cx+s*.14, cy-s*.01, s*.045, "#5d9b52");
+      } else if (kind === "gift") {
+        rr(cx-s*.26, cy-s*.10, s*.52, s*.38, s*.06, "#ef78a1", "#80627a", 2);
+        rr(cx-s*.31, cy-s*.20, s*.62, s*.13, s*.05, "#f4a6bf", "#80627a", 2);
+        ctx.fillStyle = "#ffd9e5";
+        ctx.fillRect(cx-s*.04, cy-s*.20, s*.08, s*.48);
+        ctx.beginPath();
+        ctx.moveTo(cx, cy-s*.20);
+        ctx.bezierCurveTo(cx-s*.22, cy-s*.40, cx-s*.28, cy-s*.11, cx, cy-s*.09);
+        ctx.bezierCurveTo(cx+s*.22, cy-s*.40, cx+s*.28, cy-s*.11, cx, cy-s*.09);
+        stroke("#80627a", 2);
+      } else if (kind === "rooftop") {
+        ctx.fillStyle = "#7b6fa5";
+        ctx.fillRect(cx-s*.30, cy-s*.12, s*.18, s*.38);
+        ctx.fillStyle = "#d98baa";
+        ctx.fillRect(cx-s*.08, cy-s*.24, s*.20, s*.50);
+        ctx.fillStyle = "#56a1c9";
+        ctx.fillRect(cx+s*.16, cy-s*.05, s*.16, s*.31);
+        for (let i=0;i<3;i++) circle(cx-s*.23, cy-s*.02+i*s*.10, s*.018, "#ffe57c");
+        for (let i=0;i<4;i++) circle(cx, cy-s*.14+i*s*.10, s*.018, "#ffe57c");
+      } else if (kind === "restaurant") {
+        line(cx-s*.18, cy-s*.28, cx-s*.18, cy+s*.28, "#80627a", 4);
+        line(cx-s*.25, cy-s*.28, cx-s*.25, cy-s*.05, "#80627a", 3);
+        line(cx-s*.11, cy-s*.28, cx-s*.11, cy-s*.05, "#80627a", 3);
+        line(cx+s*.16, cy-s*.28, cx+s*.16, cy+s*.28, "#80627a", 4);
+        ctx.beginPath();
+        ctx.arc(cx+s*.16, cy-s*.12, s*.11, Math.PI, 0);
+        stroke("#80627a", 4);
+        circle(cx, cy+s*.03, s*.055, "#f0a347");
+      } else if (kind === "picnic") {
+        rr(cx-s*.28, cy-s*.05, s*.56, s*.34, s*.06, "#d99867", "#80627a", 2);
+        for (let i=-2;i<=2;i++) line(cx+i*s*.10, cy-s*.05, cx+i*s*.10, cy+s*.29, "#f2d2b7", 2);
+        ctx.beginPath();
+        ctx.arc(cx, cy-s*.05, s*.22, Math.PI, 0);
+        stroke("#80627a", 4);
+      } else if (kind === "drive") {
+        rr(cx-s*.31, cy-s*.08, s*.62, s*.27, s*.09, "#e85d6f", "#80627a", 2.5);
+        ctx.beginPath();
+        ctx.moveTo(cx-s*.18, cy-s*.08);
+        ctx.lineTo(cx-s*.08, cy-s*.23);
+        ctx.lineTo(cx+s*.16, cy-s*.23);
+        ctx.lineTo(cx+s*.25, cy-s*.08);
+        ctx.closePath();
+        fillStroke("#80c5dd", "#80627a", 2);
+        circle(cx-s*.18, cy+s*.20, s*.07, "#51414f");
+        circle(cx+s*.18, cy+s*.20, s*.07, "#51414f");
+      } else if (kind === "home") {
+        ctx.beginPath();
+        ctx.moveTo(cx-s*.32, cy-s*.02);
+        ctx.lineTo(cx, cy-s*.30);
+        ctx.lineTo(cx+s*.32, cy-s*.02);
+        ctx.closePath();
+        fillStroke("#e56f8e", "#80627a", 2.5);
+        rr(cx-s*.24, cy-s*.02, s*.48, s*.31, s*.03, "#fff5f7", "#80627a", 2.5);
+        rr(cx-s*.06, cy+s*.08, s*.12, s*.21, s*.02, "#d8a57d");
+      } else {
+        ctx.beginPath();
+        ctx.arc(cx, cy-s*.07, s*.22, Math.PI*.15, Math.PI*.85, true);
+        ctx.quadraticCurveTo(cx, cy+s*.36, cx-s*.21, cy-s*.02);
+        ctx.closePath();
+        fillStroke("#e96797", "#80627a", 2.5);
+        circle(cx, cy-s*.07, s*.07, "#ffffff");
+      }
+
+      ctx.restore();
+    }
+
+    function getDownloadedFoodIconKind() {
+      const map = {
+        "Pizza": "pizza",
+        "Sushi": "sushi",
+        "Burgers": "burger",
+        "Pasta": "pasta",
+        "Kacchi": "kacchi",
+        "Dessert date": "cake",
+        "Tacos": "taco",
+        "Surprise me": "gift"
+      };
+      return map[state.food] || "pasta";
+    }
+
+    function getDownloadedPlaceIconKind() {
+      const map = {
+        rooftop: "rooftop",
+        restaurant: "restaurant",
+        picnic: "picnic",
+        drive: "drive",
+        home: "home",
+        custom: "pin"
+      };
+      return map[state.placeId] || "pin";
+    }
+
     async function createSummaryImageBlob() {
       const duetImage = await loadEmbeddedImage(EMBEDDED_IMAGES.duet);
       const canvas = document.createElement("canvas");
@@ -1404,14 +1627,14 @@
       drawRoundedImage(ctx, duetImage, 338, 336, 404, 272, 26, .08);
 
       const rows = [
-        ["DATE", state.date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }), "🗓️"],
-        ["TIME", state.time, "⏰"],
-        ["FOOD", state.food, getDownloadedFoodIcon()],
-        ["PLACE", state.place, getDownloadedPlaceIcon()]
+        ["DATE", state.date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }), "date"],
+        ["TIME", state.time, "time"],
+        ["FOOD", state.food, getDownloadedFoodIconKind()],
+        ["PLACE", state.place, getDownloadedPlaceIconKind()]
       ];
 
       let y = 662;
-      rows.forEach(([label, value, icon]) => {
+      rows.forEach(([label, value, iconKind]) => {
         roundedRectPath(ctx, 150, y, 780, 118, 28);
         ctx.fillStyle = "rgba(255,255,255,.48)";
         ctx.fill();
@@ -1426,11 +1649,7 @@
         ctx.fillStyle = badge;
         ctx.fill();
 
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.font = '38px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-        ctx.fillText(icon, 209, y + 58);
-        ctx.textBaseline = "alphabetic";
+        drawCanvasIcon(ctx, iconKind, 209, y + 58, 54);
 
         ctx.textAlign = "left";
         ctx.fillStyle = "#a15a78";
@@ -1448,11 +1667,11 @@
       ctx.fillStyle = "#6d2947";
       ctx.font = '500 29px Georgia, "Times New Roman", serif';
       const noteLines = wrapCanvasText(ctx, personalization.note, 730).slice(0, 2);
-      noteLines.forEach((line, index) => ctx.fillText(line, 540, 1220 + index * 38));
+      noteLines.forEach((line, index) => ctx.fillText(line, 540, 1202 + index * 38));
 
       ctx.fillStyle = "#bd356e";
       ctx.font = '800 19px system-ui, -apple-system, "Segoe UI", sans-serif';
-      ctx.fillText("OUR MEMORABLE DAY  •  MADE WITH LOVE BY HIRA", 540, 1302);
+      ctx.fillText("OUR MEMORABLE DAY  •  MADE WITH LOVE BY HIRA", 540, 1320);
 
       return await new Promise((resolve, reject) => {
         canvas.toBlob(blob => {
