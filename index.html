@@ -1120,7 +1120,7 @@
     function sameDate(a, b) { return a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
 
     function setPersonalization() {
-      $("#recipientName").textContent = personalization.recipient;
+      $("#recipientName").textContent = "My Love";
       $("#senderName").textContent = personalization.sender;
       $("#finalLoveNote").textContent = personalization.note;
       $("#bridePhoto").src = EMBEDDED_IMAGES.bride;
@@ -1334,6 +1334,16 @@
       ctx.restore();
     }
 
+    function getDownloadedFoodIcon() {
+      const selected = foods.find(item => item.title === state.food);
+      return selected?.icon || "🍽️";
+    }
+
+    function getDownloadedPlaceIcon() {
+      const selected = places.find(item => item.id === state.placeId || item.title === state.place);
+      return selected?.icon || "📍";
+    }
+
     async function createSummaryImageBlob() {
       const duetImage = await loadEmbeddedImage(EMBEDDED_IMAGES.duet);
       const canvas = document.createElement("canvas");
@@ -1394,29 +1404,33 @@
       drawRoundedImage(ctx, duetImage, 338, 336, 404, 272, 26, .08);
 
       const rows = [
-        ["DATE", state.date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }), "01"],
-        ["TIME", state.time, "02"],
-        ["FOOD", state.food, "03"],
-        ["PLACE", state.place, "04"]
+        ["DATE", state.date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }), "🗓️"],
+        ["TIME", state.time, "⏰"],
+        ["FOOD", state.food, getDownloadedFoodIcon()],
+        ["PLACE", state.place, getDownloadedPlaceIcon()]
       ];
 
       let y = 662;
-      rows.forEach(([label, value, number]) => {
+      rows.forEach(([label, value, icon]) => {
         roundedRectPath(ctx, 150, y, 780, 118, 28);
-        ctx.fillStyle = "rgba(253,235,241,.84)";
+        ctx.fillStyle = "rgba(255,255,255,.48)";
         ctx.fill();
+        ctx.strokeStyle = "rgba(150, 83, 111, .20)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
         roundedRectPath(ctx, 174, y + 23, 70, 70, 22);
         const badge = ctx.createLinearGradient(174, y + 23, 244, y + 93);
-        badge.addColorStop(0, "#e67da2");
-        badge.addColorStop(1, "#bd356e");
+        badge.addColorStop(0, "#f7dce7");
+        badge.addColorStop(1, "#f2cfdd");
         ctx.fillStyle = badge;
         ctx.fill();
 
         ctx.textAlign = "center";
-        ctx.fillStyle = "#ffffff";
-        ctx.font = '900 22px system-ui, -apple-system, "Segoe UI", sans-serif';
-        ctx.fillText(number, 209, y + 67);
+        ctx.textBaseline = "middle";
+        ctx.font = '38px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+        ctx.fillText(icon, 209, y + 58);
+        ctx.textBaseline = "alphabetic";
 
         ctx.textAlign = "left";
         ctx.fillStyle = "#a15a78";
